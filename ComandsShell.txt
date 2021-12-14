@@ -1,0 +1,48 @@
+from news.models import *
+
+создаем 2-х пользователей:
+u1 = User.objects.create_user(username='Nikodim')
+u2 = User.objects.create_user(username='Vasya')
+
+Создаем 2-х авторов:
+Author.objects.create(authorUser = u1)
+Author.objects.create(authorUser = u2)
+
+Создаем 4 категории:
+Category.objects.create(name = 'Экономика')
+Category.objects.create(name = 'На злобу дня')
+Category.objects.create(name = 'Котики')
+Category.objects.create(name = 'Я люблю людей')
+
+Создаем 2 новости и 1 пост:
+author = Author.objects.get(id=1) - назначаем автора 1
+Post.objects.create(author=author, topic = 'NS', post_title = 'Жизнь котика на марсе', post_text = 'Много текста про кота')
+Post.objects.create(author=author, topic = 'NS', post_title = 'Что-то о нас', post_text = 'Много текста ни о чем')
+Post.objects.create(author=author, topic = 'PT', post_title = 'Пост не прост', post_text = 'Много текста ни о чем')
+
+Добавим категории новостям:
+Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1)) - новости 1 добавляем категорию 1
+Post.objects.get(id=1).postCategory.add(Category.objects.get(id=3)) - новости 1 добавляем категорию 3
+Post.objects.get(id=3).postCategory.add(Category.objects.get(id=4)) - новости 3 добавляем категорию 4
+
+Добавим 4 комментария к разным новостям и постам:
+Comment.objects.create(post=Post.objects.get(id=1), user=Author.objects.get(id=1).authorUser, comment_text='много букв')
+Comment.objects.create(post=Post.objects.get(id=2), user=Author.objects.get(id=2).authorUser, comment_text='мало букв')
+Comment.objects.create(post=Post.objects.get(id=3), user=Author.objects.get(id=1).authorUser, comment_text='ни о чем')
+Comment.objects.create(post=Post.objects.get(id=3), user=Author.objects.get(id=2).authorUser, comment_text='пиши больше')
+
+Ставим лайки и дизлайки:
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=1).dislike()
+Comment.objects.get(id=3).dislike()
+
+Корректируем рейтинги:
+Comment.objects.get(id=1).rating
+Comment.objects.get(id=2).rating
+Comment.objects.get(id=3).rating
+
+Смотрим рейтинг автора:
+Author.objects.get(id=1).update_rating()
+
